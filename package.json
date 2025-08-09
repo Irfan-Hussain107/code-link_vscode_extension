@@ -13,13 +13,7 @@
     "vscode": "^1.80.0"
   },
   "categories": [
-    "Collaboration",
     "Other"
-  ],
-  "activationEvents": [
-    "onCommand:codeLink.startSession",
-    "onCommand:codeLink.joinSession",
-    "onCommand:codeLink.stopSession"
   ],
   "main": "./src/extension.js",
   "contributes": {
