@@ -42,6 +42,21 @@ Code Link has two roles: **Host** and **Guest**.
 
 ---
 
+## ⚙️ Configuration
+
+To make collaboration clearer, you can set a **custom display name** that will appear next to your cursor for other users.
+
+1. Open **VS Code Settings**:
+   - **Windows/Linux**: `Ctrl + ,`
+   - **macOS**: `Cmd + ,`
+2. In the search bar, type **Code Link**.
+3. Find the input box labeled **Display Name**.
+4. Enter the name you'd like others to see.  
+   The change is saved automatically.
+5. If you don’t set a name, a random one (e.g., `User-abcd`) will be assigned to you for the session.
+
+---
+
 ## ⚙ Requirements
 
 Code Link requires a running **y-websocket** server for synchronization.  
