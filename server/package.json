@@ -10,9 +10,7 @@
     "node": "18.18.0"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "ws": "^8.14.2",
-    "y-websocket": "^1.5.3",
-    "yjs": "^13.6.8"
+    "ws": "8.17.0",
+    "y-websocket": "^1.5.3"
   }
 }

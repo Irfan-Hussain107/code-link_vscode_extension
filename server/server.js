@@ -1,43 +1,30 @@
-const express = require('express');
 const http = require('http');
-const WebSocket = require('ws');
+const { WebSocketServer } = require('ws');
 const { setupWSConnection } = require('y-websocket/bin/utils');
 
-const app = express();
-const server = http.createServer(app);
+const server = http.createServer((request, response) => {
+  // This is the health check for Render and UptimeRobot
+  response.writeHead(200, { 'Content-Type': 'text/plain' });
+  response.end('Code Link server is running');
+});
 
-// Create WebSocket server
-const wss = new WebSocket.Server({ 
-  server,
-  path: '/' // This allows any path to work
+// Create a WebSocket server instance and attach it to the HTTP server
+const wss = new WebSocketServer({ server });
+
+wss.on('connection', (conn, req) => {
+  console.log('New WebSocket connection established. Setting up Y.js...');
+  try {
+    // Use the y-websocket utility to handle all the Y.js magic
+    setupWSConnection(conn, req);
+  } catch (error) {
+    console.error('CRITICAL ERROR during setupWSConnection:', error);
+    conn.close();
+  }
 });
 
 const port = process.env.PORT || 8080;
 
-app.get('/', (req, res) => {
-  res.send('Code Link server is running');
-});
-
-app.get('/health', (req, res) => {
-  res.send('OK');
-});
-
-// Handle WebSocket connections
-wss.on('connection', (ws, request) => {
-  try {
-    console.log(`WebSocket connection established for: ${request.url}`);
-    setupWSConnection(ws, request);
-  } catch (error) {
-    console.error('WebSocket setup error:', error);
-    ws.close();
-  }
-});
-
-// Handle WebSocket server errors
-wss.on('error', (error) => {
-  console.error('WebSocket server error:', error);
-});
-
+// Listen on 0.0.0.0 to be accessible in a hosting environment like Render
 server.listen(port, '0.0.0.0', () => {
   console.log(`Server listening on port ${port}`);
 });
