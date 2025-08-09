@@ -1,12 +1,19 @@
 {
   "name": "code-link",
   "displayName": "Code Link",
-  "description": "A real-time collaboration tool for VS Code.",
-  "version": "0.0.1",
+  "description": "Collaborate in real-time on any file. Share a simple room ID to invite others to code with you.",
+  "version": "0.1.0",
+  "publisher": "IrfanHussain",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Irfan-Hussain107/code-link_vscode_extension.git"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
   "categories": [
+    "Collaboration",
     "Other"
   ],
   "activationEvents": [

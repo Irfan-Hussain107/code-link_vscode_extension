@@ -1,0 +1,13 @@
+{
+  "name": "code-link-server",
+  "version": "1.0.0",
+  "description": "Backend server for the Code Link VS Code extension.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "y-websocket": "^2.0.3"
+  }
+}

@@ -1,65 +1,55 @@
-# code-link README
+# 🔗 Code Link
 
-This is the README for your extension "code-link". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+**Code Link** brings the seamless, real-time collaboration of Google Docs directly into your Visual Studio Code editor.  
+Share a simple link (Room ID) and code together on the same file — instantly.  
+See your collaborators' cursors, type together, and watch changes appear live.
 
 ---
 
-## Working with Markdown
+## ✨ Features
 
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+- **Real-Time Collaborative Editing** — Multiple users can type, delete, and edit in the same file simultaneously.
+- **Shared Cursors & Awareness** — See your collaborators' cursors, selections, and names in real time to know who is doing what.
+- **Simple Link Sharing** — Start a session and share a unique, secure Room ID to invite others. No complex setup required.
+- **Works on Existing Files** — No need to create new files; start a session on any file you already have open.
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
+---
 
-## For more information
+## 📖 How to Use
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+Code Link has two roles: **Host** and **Guest**.
 
-**Enjoy!**
+### ▶ Host (Start a Collaboration Session)
+
+1. Open the file you wish to share in VS Code.
+2. Open the Command Palette:
+   - **Windows/Linux**: `Ctrl + Shift + P`
+   - **macOS**: `Cmd + Shift + P`
+3. Run the command: **`Code Link: Start Collaboration Session`**.
+4. A notification will appear with a **Room ID**. Click **Copy ID** and share it with your collaborators.
+
+---
+
+### 👥 Guest (Join a Collaboration Session)
+
+1. Open VS Code (no file needs to be open initially).
+2. Open the Command Palette:
+   - **Windows/Linux**: `Ctrl + Shift + P`
+   - **macOS**: `Cmd + Shift + P`
+3. Run the command: **`Code Link: Join Collaboration Session`**.
+4. Paste the **Room ID** you received from the host and press Enter.
+5. A new editor tab will open with the shared code — start collaborating instantly!
+
+---
+
+## ⚙ Requirements
+
+Code Link requires a running **y-websocket** server for synchronization.  
+For local testing:
+
+```bash
+# Install the server
+npm install -g y-websocket
+
+# Run the server
+y-websocket-server
