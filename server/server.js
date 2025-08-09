@@ -1,9 +1,16 @@
 const express = require('express');
 const http = require('http');
+const WebSocket = require('ws');
 const { setupWSConnection } = require('y-websocket/bin/utils');
 
 const app = express();
 const server = http.createServer(app);
+
+// Create WebSocket server
+const wss = new WebSocket.Server({ 
+  server,
+  path: '/' // This allows any path to work
+});
 
 const port = process.env.PORT || 8080;
 
@@ -15,27 +22,20 @@ app.get('/health', (req, res) => {
   res.send('OK');
 });
 
-server.on('upgrade', (request, socket, head) => {
+// Handle WebSocket connections
+wss.on('connection', (ws, request) => {
   try {
-    // Ensure request has proper URL
-    const url = request.url || '/default-room';
-    
-    console.log(`WebSocket upgrade request for: ${url}`);
-    
-    // Create a proper request object with required properties
-    const wsRequest = {
-      url: url,
-      headers: request.headers || {},
-      connection: request.connection || socket,
-      socket: request.socket || socket
-    };
-    
-    setupWSConnection(socket, wsRequest);
-    
+    console.log(`WebSocket connection established for: ${request.url}`);
+    setupWSConnection(ws, request);
   } catch (error) {
     console.error('WebSocket setup error:', error);
-    socket.destroy();
+    ws.close();
   }
+});
+
+// Handle WebSocket server errors
+wss.on('error', (error) => {
+  console.error('WebSocket server error:', error);
 });
 
 server.listen(port, '0.0.0.0', () => {
@@ -44,7 +44,20 @@ server.listen(port, '0.0.0.0', () => {
 
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    process.exit(0);
+  wss.close(() => {
+    server.close(() => {
+      process.exit(0);
+    });
   });
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });

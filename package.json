@@ -2,7 +2,7 @@
   "name": "code-link",
   "displayName": "Code Link",
   "description": "Collaborate in real-time on any file. Share a simple room ID to invite others to code with you.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "IrfanHussain",
   "icon": "images/icon.png",
   "repository": {
