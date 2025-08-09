@@ -1,0 +1,61 @@
+{
+  "name": "code-link",
+  "displayName": "Code Link",
+  "description": "A real-time collaboration tool for VS Code.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:codeLink.startSession",
+    "onCommand:codeLink.joinSession",
+    "onCommand:codeLink.stopSession"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeLink.startSession",
+        "title": "Code Link: Start Collaboration Session"
+      },
+      {
+        "command": "codeLink.joinSession",
+        "title": "Code Link: Join Collaboration Session"
+      },
+      {
+        "command": "codeLink.stopSession",
+        "title": "Code Link: Stop Collaboration Session"
+      }
+    ],
+    "configuration": {
+      "title": "Code Link",
+      "properties": {
+        "codeLink.displayName": {
+          "type": "string",
+          "default": "",
+          "description": "Your name to display to other collaborators."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "nanoid": "^3.3.4",
+    "y-websocket": "^1.5.0",
+    "yjs": "^13.6.8"
+  }
+}
