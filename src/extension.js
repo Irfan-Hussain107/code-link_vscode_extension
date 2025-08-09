@@ -31,7 +31,7 @@ function activate(context) {
 
         const roomId = nanoid();
         const displayName = vscode.workspace.getConfiguration('codeLink').get('displayName') || `User-${nanoid(4)}`;
-        const wsUrl = 'ws://localhost:1234';
+        const wsUrl = 'wss://code-link-server.onrender.com';
 
         const { provider, ydoc } = yjsProvider.createRoom(roomId, wsUrl, displayName);
         
@@ -83,7 +83,7 @@ function activate(context) {
         if (!roomId) return;
 
         const displayName = vscode.workspace.getConfiguration('codeLink').get('displayName') || `User-${nanoid(4)}`;
-        const wsUrl = 'ws://localhost:1234';
+        const wsUrl = 'wss://code-link-server.onrender.com';
 
         vscode.window.showInformationMessage(`Connecting to room ${roomId}...`);
 
