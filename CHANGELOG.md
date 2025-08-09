@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.1.5] - 2025-08-10
+
+### Fixed
+-   Fixed connection bugs.
+
+---
+
 ## [0.1.4] - 2025-08-10
 
 ### Fixed
