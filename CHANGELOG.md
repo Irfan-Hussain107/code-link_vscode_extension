@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.1.2] - 2025-08-10
+
+### Fixed
+-   Fixed some bugs.
+
+---
+
 ## [0.1.1] - 2025-08-10
 
 ### Fixed
