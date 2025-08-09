@@ -1,9 +1,16 @@
 # Change Log
 
-All notable changes to the "code-link" extension will be documented in this file.
+## [0.1.1] - 2025-08-10
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+### Fixed
+-   Updated backend server logic for improved stability and connection handling.
+-   Resolved deployment issues to ensure the server stays online.
 
-## [Unreleased]
+---
 
-- Initial release
+### 0.1.0
+
+Initial release of Code Link.
+* Real-time text synchronization for single files.
+* Shared cursor awareness with collaborator names.
+* Simple session sharing via Room ID.
