@@ -5,19 +5,14 @@ const { customAlphabet } = require("nanoid");
 
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 10);
 
-// Helper function to generate a random color for a user's cursor
 function randomColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
 
-/**
- * Creates a Y.js room and connects via WebSocket.
- */
 function createRoom(roomId, wsUrl, displayName) {
   const ydoc = new Y.Doc();
   const provider = new WebsocketProvider(wsUrl, roomId, ydoc);
 
-  // Add connection logging
   provider.on('status', (event) => {
     console.log('WebSocket status:', event.status);
     if (event.status === 'connected') {
@@ -32,7 +27,6 @@ function createRoom(roomId, wsUrl, displayName) {
     vscode.window.showErrorMessage('Failed to connect to collaboration server');
   });
 
-  // Set user information (name and color) for cursor awareness
   provider.awareness.setLocalStateField("user", {
     name: displayName || "Guest",
     color: randomColor(),
@@ -41,23 +35,17 @@ function createRoom(roomId, wsUrl, displayName) {
   return { ydoc, provider };
 }
 
-/**
- * Binds a VS Code TextDocument to a Y.js shared text type.
- * FIXED VERSION - Prevents feedback loops
- */
+
 async function bindTextDocument(vscodeUri, ydoc) {
   const ytext = ydoc.getText("codetext");
-  let isUpdatingFromRemote = false; // Prevent feedback loops
+  let isUpdatingFromRemote = false; 
   let localChangeTimeout = null;
 
   console.log('Binding text document, current content length:', ytext.length);
 
-  // Get the document
   const doc = await vscode.workspace.openTextDocument(vscodeUri);
 
-  // Listener for remote changes from Y.js -> apply to VS Code
   const ytextObserver = async (event, transaction) => {
-    // Skip if this change came from us
     if (transaction.local) {
       return;
     }
@@ -69,7 +57,6 @@ async function bindTextDocument(vscodeUri, ydoc) {
       const fullText = ytext.toString();
       const edit = new vscode.WorkspaceEdit();
       
-      // Get fresh document reference
       const currentDoc = await vscode.workspace.openTextDocument(vscodeUri);
       const fullRange = new vscode.Range(
         new vscode.Position(0, 0), 
@@ -78,7 +65,6 @@ async function bindTextDocument(vscodeUri, ydoc) {
       
       edit.replace(currentDoc.uri, fullRange, fullText);
       
-      // Apply the edit
       const success = await vscode.workspace.applyEdit(edit);
       if (!success) {
         console.error('Failed to apply workspace edit');
@@ -87,7 +73,6 @@ async function bindTextDocument(vscodeUri, ydoc) {
     } catch (e) {
       console.error("Failed to apply remote change:", e);
     } finally {
-      // Reset flag after a short delay to ensure VS Code has processed the change
       setTimeout(() => {
         isUpdatingFromRemote = false;
       }, 50);
@@ -96,7 +81,6 @@ async function bindTextDocument(vscodeUri, ydoc) {
   
   ytext.observe(ytextObserver);
 
-  // Listener for local changes from VS Code -> apply to Y.js
   const localDisposable = vscode.workspace.onDidChangeTextDocument((event) => {
     if (event.document.uri.toString() !== vscodeUri.toString()) return;
     if (isUpdatingFromRemote) {
@@ -106,12 +90,10 @@ async function bindTextDocument(vscodeUri, ydoc) {
 
     console.log('Processing local change, changes:', event.contentChanges.length);
 
-    // Clear any pending timeout
     if (localChangeTimeout) {
       clearTimeout(localChangeTimeout);
     }
 
-    // Debounce rapid changes
     localChangeTimeout = setTimeout(() => {
       if (isUpdatingFromRemote) return;
 
@@ -135,7 +117,7 @@ async function bindTextDocument(vscodeUri, ydoc) {
           }
         }
       });
-    }, 10); // 10ms debounce
+    }, 10); 
   });
 
   return {
@@ -149,9 +131,7 @@ async function bindTextDocument(vscodeUri, ydoc) {
   };
 }
 
-/**
- * Listens for local cursor changes and broadcasts them to others.
- */
+
 function hookEditorSelectionToAwareness(provider) {
   return vscode.window.onDidChangeTextEditorSelection((event) => {
     const editor = event.textEditor;
@@ -169,12 +149,8 @@ function hookEditorSelectionToAwareness(provider) {
   });
 }
 
-// A DecorationType is a template for styling things in the editor
 const cursorDecorationType = vscode.window.createTextEditorDecorationType({});
 
-/**
- * Renders the cursors of remote users in the editor.
- */
 function updateRemoteCursors(provider) {
   const states = provider.awareness.getStates();
   const remoteCursors = [];

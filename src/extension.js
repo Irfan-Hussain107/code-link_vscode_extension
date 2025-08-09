@@ -2,10 +2,8 @@ const vscode = require('vscode');
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 10);
 
-// Import the service file
 const yjsProvider = require("./services/yjsProvider");
 
-// A Map to store active session details, keyed by the document's URI as a string.
 const activeSessions = new Map();
 
 function activate(context) {
@@ -13,9 +11,7 @@ function activate(context) {
         
     console.log('Congratulations, your extension "code-link" is now active!');
 
-    // =================================================================================
-    // COMMAND 1: Start a Collaboration Session (for the Host)
-    // =================================================================================
+
     const startSessionCommand = vscode.commands.registerCommand('codeLink.startSession', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -35,12 +31,10 @@ function activate(context) {
 
         const { provider, ydoc } = yjsProvider.createRoom(roomId, wsUrl, displayName);
         
-        // Wait for connection before binding
         provider.on('status', async (event) => {
             if (event.status === 'connected') {
                 console.log('Host connected, initializing document...');
                 
-                // Initialize the shared document with current content
                 const ytext = ydoc.getText("codetext");
                 const currentContent = editor.document.getText();
                 
@@ -71,9 +65,7 @@ function activate(context) {
         });
     });
 
-    // =================================================================================
-    // COMMAND 2: Join a Collaboration Session (for the Guest)
-    // =================================================================================
+
     const joinSessionCommand = vscode.commands.registerCommand('codeLink.joinSession', async () => {
         const roomId = await vscode.window.showInputBox({
             prompt: "Enter the Room ID to join the collaboration session",
@@ -90,27 +82,23 @@ function activate(context) {
         const { provider, ydoc } = yjsProvider.createRoom(roomId, wsUrl, displayName);
         const ytext = ydoc.getText("codetext");
 
-        // Wait for connection and then sync
         provider.on('status', async (event) => {
             if (event.status === 'connected') {
                 console.log('Guest connected, waiting for sync...');
                 
-                // Give it a moment to sync, then check content
                 setTimeout(async () => {
                     const initialContent = ytext.toString();
                     console.log('Synced content length:', initialContent.length);
                     console.log('Synced content:', initialContent.substring(0, 100) + '...');
                     
                     try {
-                        // Create new document with the synced content
                         const doc = await vscode.workspace.openTextDocument({ 
                             content: initialContent,
-                            language: 'plaintext' // You can detect language from file extension if needed
+                            language: 'plaintext' 
                         });
                         const editor = await vscode.window.showTextDocument(doc, { preview: false });
                         const docUri = editor.document.uri;
 
-                        // Bind the document
                         const binding = await yjsProvider.bindTextDocument(docUri, ydoc);
                         const awarenessHook = yjsProvider.hookEditorSelectionToAwareness(provider);
                         
@@ -125,20 +113,17 @@ function activate(context) {
                         console.error('Error creating synced document:', error);
                         vscode.window.showErrorMessage('Failed to sync document content');
                     }
-                }, 1000); // Wait 1 second for sync
+                }, 1000); 
             }
         });
 
-        // Also handle connection errors
         provider.on('connection-error', (error) => {
             console.error('Connection error:', error);
             vscode.window.showErrorMessage(`Failed to connect to room ${roomId}`);
         });
     });
 
-    // =================================================================================
-    // COMMAND 3: Stop a Collaboration Session
-    // =================================================================================
+
     const stopSessionCommand = vscode.commands.registerCommand('codeLink.stopSession', () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -160,7 +145,6 @@ function activate(context) {
 
         vscode.window.showInformationMessage("Collaboration session stopped.");
         
-        // Clear old decorations
         const { cursorDecorationType } = require("./services/yjsProvider");
         editor.setDecorations(cursorDecorationType, []);
     });
