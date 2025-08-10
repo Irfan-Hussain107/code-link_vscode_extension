@@ -3,6 +3,13 @@
 ## [0.1.5] - 2025-08-10
 
 ### Fixed
+-   Updated README.md.
+
+---
+
+## [0.1.5] - 2025-08-10
+
+### Fixed
 -   Fixed connection bugs.
 
 ---
